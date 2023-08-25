@@ -44,6 +44,7 @@ export class UsersController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ResponseDto<User>> {
     const user = await this.usersService.findOne(id);
+    console.log(user);
     if (user) {
       return new ResponseDto(user, 200, 'Succesfully get user');
     }
