@@ -3,29 +3,37 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
 import { RecipeModule } from './modules/recipe/recipe.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
+import { IngredientModule } from './modules/ingredient/ingredient.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      ignoreEnvFile: true,
+      envFilePath: '.env',
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '2711',
-      database: 'foodblog',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      logging: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.get('DB_HOST'),
+        port: Number(config.get('DB_PORT')),
+        username: config.get('DB_USERNAME'),
+        password: config.get('DB_PASSWORD'),
+        database: config.get('DB_DATABASE_NAME'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        logging: true,
+      }),
+      inject: [ConfigService],
     }),
     UsersModule,
     RecipeModule,
     AuthModule,
+    CloudinaryModule,
+    IngredientModule,
   ],
   providers: [
     {

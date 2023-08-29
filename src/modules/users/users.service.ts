@@ -16,7 +16,7 @@ export class UsersService {
     if (!userList) {
       throw new NotFoundException();
     }
-    return this.userRepository.find();
+    return userList;
   }
 
   async findOne(userId: number): Promise<User> {
@@ -24,7 +24,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException();
     }
-    return this.userRepository.findOneBy({ userId });
+    return user;
   }
 
   async remove(userId: number): Promise<void> {

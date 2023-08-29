@@ -16,7 +16,8 @@ import {
 } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { UserDto } from './dto/user.dto';
-import { ResponseDto } from 'src/common/dto/responseDto';
+import { ResponseDto } from '../../common/dto/responseDto';
+import { SUCCESS_GET_DATA } from '../../constants';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -34,9 +35,7 @@ export class UsersController {
   @Get()
   async getAllUser(): Promise<ResponseDto<User[]>> {
     const userList = await this.usersService.findAll();
-    if (userList) {
-      return new ResponseDto(userList, 200, 'Succesfully get user');
-    }
+    return new ResponseDto(userList, 200, SUCCESS_GET_DATA);
   }
 
   @Get(':id')
@@ -44,9 +43,8 @@ export class UsersController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ResponseDto<User>> {
     const user = await this.usersService.findOne(id);
-    if (user) {
-      return new ResponseDto(user, 200, 'Succesfully get user');
-    }
+
+    return new ResponseDto(user, 200, SUCCESS_GET_DATA);
   }
 
   @Delete(':id')

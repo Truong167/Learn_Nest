@@ -1,10 +1,12 @@
 import { Exclude } from 'class-transformer';
+import { Recipe } from 'src/modules/recipe/entities/recipe.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'User' })
@@ -32,6 +34,9 @@ export class User {
 
   @Column({ type: 'timestamp without time zone', nullable: true })
   dateUpdatedRecipe: Date;
+
+  @OneToMany(() => Recipe, (recipe) => recipe.User)
+  recipes: Recipe[];
 
   @Exclude()
   @CreateDateColumn()
